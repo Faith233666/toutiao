@@ -3,11 +3,22 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
-const routes = [
+const routes = [{
+    path: '/',
+    redirect: '/login'
+  },
   {
     path: '/login',
-    component:()=> import("@/views/Login")
-  }
+    //组件的懒加载
+    //@表示src的别名
+    component: () => import("@/views/Login")
+  },
+  {
+    path: '/toast',
+    //组件的懒加载
+    //@表示src的别名
+    component: () => import("@/views/Toast")
+  },
 ]
 
 const router = new VueRouter({

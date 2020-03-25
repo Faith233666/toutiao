@@ -9,7 +9,7 @@
     <div class="user">
       <form action='javascript:;'>
         <input type="text" placeholder="用户名/手机号码" />
-        <input type="text" placeholder="密码" />
+        <input type="password" placeholder="密码" />
         <button type="submit">登录</button>
       </form>
     </div>
@@ -22,15 +22,15 @@ export default {};
 
 <style lang='less' >
 .login {
-  width: 366px;
-  height: 610px;
-  margin: 100px auto;
-  padding: 20px;
+  width: 10rem;
+  height: 16.667rem;
+  margin: 2.732rem auto;
+  padding: .546rem;
   background-color: #f2f2f2;
   .top {
     span {
       display: inline-block;
-      font-size: 24px;
+      font-size: .656rem;
       font-weight: bold;
     }
   }
@@ -38,7 +38,7 @@ export default {};
     display: flex;
     justify-content: center;
     span {
-      font-size: 150px;
+      font-size: 4.098rem;
       color: red;
     }
   }
@@ -46,22 +46,22 @@ export default {};
     text-align: center;
     input {
       width: 100%;
-      border: 0px;
-      font-size: 18px;
+      border: 0rem;
+      font-size: .492rem;
       outline: none;
       background: #f2f2f2;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-bottom: 1px solid black;
+      padding: .027rem;
+      margin-bottom: .273rem;
+      border-bottom: .027rem solid black;
     }
     button {
       width: 100%;
-      height: 50px;
-      font-size: 20px;
-      line-height: 20px;
-      margin-top: 50px;
+      height: 1.366rem;
+      font-size: .546rem;
+      line-height: .546rem;
+      margin-top: 1.366rem;
       border: none;
-      border-radius: 60px;
+      border-radius: 1.639rem;
       color: white;
       background-color: #cc3300;
     }
