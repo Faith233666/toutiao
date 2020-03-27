@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div class="register">
     <div class="top">
       <span class="iconfont iconicon-test"></span>
     </div>
@@ -11,13 +11,21 @@
       <input type="password" v-model="from.password" placeholder="密码" />
       <button type="submit" @click="handleclick">登录</button>
     </div>-->
+    <!-- rules 规则  required 必填项 message 提示信息 -->
     <van-form @submit="onSubmit" class="from">
       <van-field
         v-model="from.username"
-        name="用户名"
+        name="用户名/手机号码"
         label="用户名"
         placeholder="用户名"
-        :rules="[{ required: true, message: '请填写用户名' }]"
+        :rules="[{ required: true, message: '请填写手机号码' }]"
+      />
+      <van-field
+        v-model="from.nickname"
+        name="昵称"
+        label="昵称"
+        placeholder="昵称"
+        :rules="[{ required: true, message: '请填写昵称' }]"
       />
       <van-field
         v-model="from.password"
@@ -28,11 +36,11 @@
         :rules="[{ required: true, message: '请填写密码' }]"
       />
       <div style="margin: 16px;">
-        <van-button round block type="info" native-type="submit" class="van-login">登录</van-button>
+        <van-button round block type="info" native-type="submit" class="van-register">注册</van-button>
       </div>
-      <router-link to="/register">
+      <router-link to="/login">
         <div style="margin: 16px;">
-          <van-button round block type="info" class="van-register">注册</van-button>
+          <van-button round block type="info" class="van-login">登录</van-button>
         </div>
       </router-link>
     </van-form>
@@ -45,29 +53,25 @@ export default {
     return {
       from: {
         username: "",
-        password: ""
+        password: "",
+        nickname: ""
       }
     };
   },
   methods: {
     onSubmit(values) {
       this.$axios({
-        url: "/login",
+        url: "/register",
         method: "post",
         data: this.from
-      }).then(res => {
-        if (res.status == 200) {
-          this.$toast.success(res.data.message);
-          this.$router.push("/user");
-        }
-      });
+      }).then(res => this.$toast.success(res.data.message));
     }
   }
 };
 </script>
-
 <style lang='less' scoped>
-.login {
+// scoped表示当前组件不影响到其他组件
+.register {
   width: 10rem;
   margin: 2.732rem auto;
   padding: 0.546rem;

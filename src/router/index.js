@@ -14,11 +14,17 @@ const routes = [{
     component: () => import("@/views/Login")
   },
   {
-    path: '/toast',
+    path: '/register',
     //组件的懒加载
     //@表示src的别名
-    component: () => import("@/views/Toast")
+    component: () => import("@/views/Register")
   },
+  {
+    path: '/user',
+    //组件的懒加载
+    //@表示src的别名
+    component: () => import("@/views/User")
+  }
 ]
 
 const router = new VueRouter({
