@@ -24,9 +24,14 @@ const routes = [{
     //组件的懒加载
     //@表示src的别名
     component: () => import("@/views/User")
+  },
+  {
+    path: '/user2',
+    //组件的懒加载
+    //@表示src的别名
+    component: () => import("@/views/User2")
   }
 ]
-
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,

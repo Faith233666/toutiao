@@ -72,10 +72,7 @@ export default {
 <style lang='less' scoped>
 // scoped表示当前组件不影响到其他组件
 .register {
-  width: 10rem;
-  margin: 2.732rem auto;
   padding: 0.546rem;
-  background-color: #f2f2f2;
   .top {
     span {
       display: inline-block;
@@ -94,7 +91,6 @@ export default {
   .user {
     text-align: center;
     input {
-      width: 100%;
       border: 0rem;
       font-size: 0.492rem;
       outline: none;
@@ -104,7 +100,6 @@ export default {
       border-bottom: 0.027rem solid black;
     }
     button {
-      width: 100%;
       height: 1.366rem;
       font-size: 0.546rem;
       line-height: 0.546rem;
@@ -118,7 +113,6 @@ export default {
   .from {
     .van-cell {
       padding: 10px 0px;
-      background: #f2f2f2;
       border-bottom: 1px solid black;
       margin-bottom: 0.273rem;
     }
