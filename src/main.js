@@ -15,7 +15,7 @@ Vue.prototype.$axios = axios;
 
 axios.defaults.baseURL = "http://localhost:3000";
 
-//注册Vant插件，Vue.use都是注册插件
+//注册Vant插件，Vue.use是注册插件
 Vue.use(Vant);
 
 //上线环境是否提示信息（忽略）
