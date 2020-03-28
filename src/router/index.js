@@ -26,10 +26,16 @@ const routes = [{
     component: () => import("@/views/User")
   },
   {
-    path: '/user2',
+    path: '/edit',
     //组件的懒加载
     //@表示src的别名
-    component: () => import("@/views/User2")
+    component: () => import("@/views/Edit")
+  },
+  {
+    path: '/edit-profile',
+    //组件的懒加载
+    //@表示src的别名
+    component: () => import("@/views/EditProfile")
   }
 ]
 const router = new VueRouter({

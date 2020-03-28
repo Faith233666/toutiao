@@ -7,14 +7,19 @@
 <style lang="less">
 @import url("//at.alicdn.com/t/font_1426139_jm7n2373nlh.css");
 @import url("../node_modules/vant/lib/index.css");
-@media screen and (min-width:366px){
+@media screen and (max-width: 680px){
   html{
-    font-size: 36.6px;
+        font-size: 68px;
   }
 }
-@media screen and (max-width:680px){
+@media screen and (max-width: 480px){
   html{
-    font-size: 68px;
+        font-size: 48px;
+  }
+}
+@media screen and (max-width: 360px){
+  html{
+        font-size: 36px;
   }
 }
 * {
