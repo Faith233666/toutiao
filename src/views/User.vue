@@ -3,7 +3,7 @@
     <div class="nav">
       <i class="iconfont iconjiantou2" @click="$router.back()"></i>
       <div>个人中心</div>
-      <i class="iconfont iconshouye" @click="$router.push("/login")"></i>
+      <i class="iconfont iconshouye" @click='$router.push("/login")'></i>
     </div>
     <div class="top">
       <div class="t-left">
