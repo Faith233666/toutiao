@@ -87,6 +87,7 @@ export default {
     },
     //修改后台的图片路径
     handleEdit(data) {
+      //返回获取的后台请求
       return this.$axios({
         method: "post",
         url: "/user_update/" + this.userInfo.id,
@@ -101,6 +102,7 @@ export default {
     },
     //修改昵称的事件
     handleEditChangeNickname() {
+      //用request变量接收请求并添加成功的事件
       const request = this.handleEdit({ nickname: this.nickname });
       request.then(() => {
         this.userInfo.nickname = this.nickname;

@@ -41,6 +41,7 @@ export default {
     });
   },
   methods: {
+    //id 要删除的关注的人的id,index 数组循环的索引
     cancel(id, index) {
       this.$dialog
         .confirm({
@@ -49,12 +50,14 @@ export default {
         })
         .then(() => {
           this.$axios({
+            //根据id发送请求
             url: "/user_unfollow/" + id,
             headers: {
               Authorization: this.userJson.token
             }
           }).then(res => {
             this.$toast.success("取消关注成功!");
+            //根据索引删除数组
             this.follows.splice(index, 1);
           });
         }).catch(() => {
