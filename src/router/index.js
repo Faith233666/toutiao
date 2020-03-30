@@ -36,6 +36,18 @@ const routes = [{
     //组件的懒加载
     //@表示src的别名
     component: () => import("@/views/Follow")
+  },
+  {
+    path: '/comment',
+    //组件的懒加载
+    //@表示src的别名
+    component: () => import("@/views/Comment")
+  },
+  {
+    path: '/star',
+    //组件的懒加载
+    //@表示src的别名
+    component: () => import("@/views/Star")
   }
 ]
 const router = new VueRouter({

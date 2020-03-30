@@ -19,7 +19,7 @@
       show-cancel-button
       @confirm="handleEditChangePassword"
     >
-    <van-field type="password" v-model="password" placeholder="请输入密码" />
+      <van-field type="password" v-model="password" placeholder="请输入密码" />
     </van-dialog>
     <ListBar label="性别" :tips="['女','男'][userInfo.gender]" @click.native="showGender=true"></ListBar>
     <!-- ActionSheet 上拉菜单 -->
@@ -87,7 +87,7 @@ export default {
     },
     //修改后台的图片路径
     handleEdit(data) {
-      this.$axios({
+      return this.$axios({
         method: "post",
         url: "/user_update/" + this.userInfo.id,
         headers: {
@@ -101,19 +101,25 @@ export default {
     },
     //修改昵称的事件
     handleEditChangeNickname() {
-      this.handleEdit({ nickname: this.nickname });
-      this.userInfo.nickname = this.nickname;
-      this.nickname = "";
+      const request = this.handleEdit({ nickname: this.nickname });
+      request.then(() => {
+        this.userInfo.nickname = this.nickname;
+        this.nickname = "";
+      });
     },
     //修改密码的事件
     handleEditChangePassword() {
-      this.handleEdit({ password: this.password });
-      this.password = "";
+      const request = this.handleEdit({ password: this.password });
+      request.then(() => {
+        this.password = "";
+      });
     },
     //修改性别的事件
     onSelect(item) {
-      this.handleEdit({ gender: item.value });
-      this.userInfo.gender = item.value;
+      const request = this.handleEdit({ gender: item.value });
+      request.then(() => {
+        this.userInfo.gender = item.value;
+      });
     }
   },
   components: {
