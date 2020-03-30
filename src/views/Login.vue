@@ -19,6 +19,8 @@
         placeholder="用户名"
         :rules="[{ required: true, message: '请填写用户名' }]"
       />
+      <!-- form表单 组件 -->
+      <!-- rules 规则   required:true表示必须的 message为不填时提示的信息 -->
       <van-field
         v-model="from.password"
         type="password"
@@ -58,7 +60,7 @@ export default {
       }).then(res => {
         if (res.status == 200) {
           this.$toast.success(res.data.message);
-          localStorage.setItem('userInfo',JSON.stringify(res.data.data));
+          localStorage.setItem("userInfo", JSON.stringify(res.data.data));
           this.$router.push("/user");
         }
       });
@@ -108,7 +110,7 @@ export default {
   }
   .from {
     .van-cell {
-      padding: .273rem 0px;
+      padding: 0.273rem 0px;
       border-bottom: 1px solid black;
       margin-bottom: 0.273rem;
     }

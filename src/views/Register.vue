@@ -11,7 +11,6 @@
       <input type="password" v-model="from.password" placeholder="密码" />
       <button type="submit" @click="handleclick">登录</button>
     </div>-->
-    <!-- rules 规则  required 必填项 message 提示信息 -->
     <van-form @submit="onSubmit" class="from">
       <van-field
         v-model="from.username"
@@ -20,6 +19,7 @@
         placeholder="用户名"
         :rules="[{ required: true, message: '请填写手机号码' }]"
       />
+      <!-- rules 规则  required 必填项 message 提示信息 -->
       <van-field
         v-model="from.nickname"
         name="昵称"

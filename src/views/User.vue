@@ -3,11 +3,13 @@
     <div class="nav">
       <i class="iconfont iconjiantou2" @click="$router.back()"></i>
       <div>个人中心</div>
-      <i class="iconfont iconshouye" @click='$router.push("/login")'></i>
+      <i class="iconfont iconshouye" @click="$router.push("/login")"></i>
     </div>
     <div class="top">
       <div class="t-left">
         <span>
+          <!-- $axios.defaults.baseURL为基地址http://127.0.0.1:3000 -->
+          <!-- 能通过this调用的参数和方法都可以在模板中使用 -->
           <img :src="$axios.defaults.baseURL+userInfo.head_img" />
         </span>
       </div>
@@ -16,6 +18,7 @@
           <i class="iconfont iconxingbienan"></i>
           {{userInfo.nickname}}
         </span>
+        <!-- 日期插件固定写法 -->
         <p>{{moment(userInfo.create_date).format('YYYY-MM-DD')}}</p>
       </div>
       <span class="iconfont iconjiantou1"></span>
@@ -119,7 +122,7 @@ export default {
       .iconxingbienan {
         color: blue;
         vertical-align: middle;
-        font-size: .333rem;
+        font-size: 0.333rem;
         margin-right: 0.137rem;
       }
       .username {
