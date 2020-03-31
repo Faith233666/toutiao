@@ -25,7 +25,7 @@
         :rules="[{ required: true, message: '请填写密码' }]"
       />
       <div style="margin: 16px;">
-        <!-- native-type绑定了submit表单提交事件 -->
+        <!-- native-type  绑定了submit表单提交事件 -->
         <van-button round block type="info" native-type="submit" class="van-login">登录</van-button>
       </div>
       <router-link to="/register">
