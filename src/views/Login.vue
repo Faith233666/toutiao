@@ -6,11 +6,6 @@
     <div class="logo">
       <span class="iconfont iconnew"></span>
     </div>
-    <!-- <div class="user">
-      <input type="text" v-model="from.username" placeholder="用户名/手机号码" />
-      <input type="password" v-model="from.password" placeholder="密码" />
-      <button type="submit" @click="handleclick">登录</button>
-    </div>-->
     <!-- form表单 组件 -->
     <!-- rules 规则   required:true表示必须的 message为不填时提示的信息 -->
     <van-form @submit="onSubmit" class="from">
