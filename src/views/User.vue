@@ -36,27 +36,34 @@ import moment from "moment";
 export default {
   data() {
     return {
+      //给components的小组件传值，并使用
       rows: [
         { label: "我的关注", tips: "关注的用户",path:"/follow" },
         { label: "我的跟帖", tips: "跟帖回复" ,path:"/comment"},
         { label: "我的收藏", tips: "文章视频" ,path:"/star"}
       ],
       userInfo: {},
+      //momentJs日期组件
       moment
     };
   },
+  //注册组件
   components: {
     Listbar
   },
+  //相当于window.onload，页面资源加载完成后执行的函数
   mounted() {
+    //获取本地存储的数据
     let userInfo = JSON.parse(localStorage.getItem("userInfo"));
     this.$axios({
+      //调用用户详情接口，渲染数据
       url: "/user/" + userInfo.user.id,
       headers: {
         Authorization: userInfo.token
       }
     }).then(res => {
       const data = res.data.data;
+      //将个人信息存入data中的userInfo
       this.userInfo = data;
     });
   },

@@ -38,29 +38,40 @@ import ListBar from "@/components/Listbar";
 export default {
   data() {
     return {
+      //本地存储的数据
       userJson: "",
+      //个人信息的数据
       userInfo: "",
+      //是否显示修改昵称的dialog弹出框
       show: false,
+      //获取弹出框中修改昵称文本框的值
       nickname: "",
+      //是否显示修改密码的dialog弹出框
       showPassword: false,
+      //获取弹出框中修改密码文本框的值
       password: "",
+      //设置上拉框的参数
       actions: [
         { name: "男", value: 1 },
         { name: "女", value: 0 }
       ],
+      //是否显示上拉框
       showGender: false
     };
   },
   mounted() {
+    //获取本地存储的信息，存入data中的userJson中
     let userJson = JSON.parse(localStorage.getItem("userInfo")) || [];
     this.userJson = userJson;
     this.$axios({
+      //调用用户详情接口
       url: "/user/" + userJson.user.id,
       headers: {
         Authorization: userJson.token
       }
     }).then(res => {
       console.log(res);
+      //获取个人信息数据，存入data中的userInfo中
       this.userInfo = res.data.data;
     });
   },
@@ -80,6 +91,7 @@ export default {
       }).then(res => {
         const { url } = res.data.data;
         this.userInfo.head_img = url;
+        //传递图片地址，为了修改后台图片
         this.handleEdit({
           head_img: url
         });
@@ -88,6 +100,7 @@ export default {
     //修改后台的图片路径
     handleEdit(data) {
       //返回获取的后台请求
+      //调用编辑用户信息接口
       return this.$axios({
         method: "post",
         url: "/user_update/" + this.userInfo.id,
@@ -103,27 +116,38 @@ export default {
     //修改昵称的事件
     handleEditChangeNickname() {
       //用request变量接收请求并添加成功的事件
+      //传入昵称对象，修改昵称
       const request = this.handleEdit({ nickname: this.nickname });
       request.then(() => {
+        //修改渲染的数据
         this.userInfo.nickname = this.nickname;
+        //清空弹出框的文本
         this.nickname = "";
       });
     },
     //修改密码的事件
     handleEditChangePassword() {
+      //用request变量接收请求并添加成功的事件
+      //传入密码对象，修改密码
       const request = this.handleEdit({ password: this.password });
       request.then(() => {
+         //清空弹出框的文本
         this.password = "";
       });
     },
     //修改性别的事件
+    //item传actions中选中的对象
     onSelect(item) {
+      //用request变量接收请求并添加成功的事件
+      //传入性别对象，修改性别
       const request = this.handleEdit({ gender: item.value });
       request.then(() => {
+        //修改渲染的数据
         this.userInfo.gender = item.value;
       });
     }
   },
+  //注册组件
   components: {
     NaigateBar,
     ListBar

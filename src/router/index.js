@@ -23,31 +23,55 @@ const routes = [{
     path: '/user',
     //组件的懒加载
     //@表示src的别名
-    component: () => import("@/views/User")
+    component: () => import("@/views/User"),
+    meta: {
+      goto: true
+    }
   },
   {
     path: '/edit-profile',
     //组件的懒加载
     //@表示src的别名
-    component: () => import("@/views/EditProfile")
+    component: () => import("@/views/EditProfile"),
+    meta: {
+      goto: true
+    }
   },
   {
     path: '/follow',
     //组件的懒加载
     //@表示src的别名
-    component: () => import("@/views/Follow")
+    component: () => import("@/views/Follow"),
+    meta: {
+      goto: true
+    }
   },
   {
     path: '/comment',
     //组件的懒加载
     //@表示src的别名
-    component: () => import("@/views/Comment")
+    component: () => import("@/views/Comment"),
+    meta: {
+      goto: true
+    }
   },
   {
     path: '/star',
     //组件的懒加载
     //@表示src的别名
-    component: () => import("@/views/Star")
+    component: () => import("@/views/Star"),
+    meta: {
+      goto: true
+    }
+  },
+  {
+    path: '/index',
+    //组件的懒加载
+    //@表示src的别名
+    component: () => import("@/views/Index"),
+    meta: {
+      goto: true
+    }
   }
 ]
 const router = new VueRouter({

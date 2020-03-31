@@ -60,6 +60,7 @@ export default {
   },
   methods: {
     onSubmit(values) {
+      //调用注册接口
       this.$axios({
         url: "/register",
         method: "post",

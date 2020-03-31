@@ -11,6 +11,8 @@
       <input type="password" v-model="from.password" placeholder="密码" />
       <button type="submit" @click="handleclick">登录</button>
     </div>-->
+    <!-- form表单 组件 -->
+    <!-- rules 规则   required:true表示必须的 message为不填时提示的信息 -->
     <van-form @submit="onSubmit" class="from">
       <van-field
         v-model="from.username"
@@ -19,8 +21,6 @@
         placeholder="用户名"
         :rules="[{ required: true, message: '请填写用户名' }]"
       />
-      <!-- form表单 组件 -->
-      <!-- rules 规则   required:true表示必须的 message为不填时提示的信息 -->
       <van-field
         v-model="from.password"
         type="password"
@@ -30,6 +30,7 @@
         :rules="[{ required: true, message: '请填写密码' }]"
       />
       <div style="margin: 16px;">
+        <!-- native-type绑定了submit表单提交事件 -->
         <van-button round block type="info" native-type="submit" class="van-login">登录</van-button>
       </div>
       <router-link to="/register">
@@ -44,6 +45,7 @@
 <script>
 export default {
   data() {
+    //v-model绑定的数据
     return {
       from: {
         username: "",
@@ -52,15 +54,20 @@ export default {
     };
   },
   methods: {
+    //form表单组件的提交事件
     onSubmit(values) {
+      //调用登录接口
       this.$axios({
         url: "/login",
         method: "post",
         data: this.from
       }).then(res => {
         if (res.status == 200) {
+          //toast轻提示框，成功提示
           this.$toast.success(res.data.message);
+          //将返回的数据存入本地存储，以便后面使用
           localStorage.setItem("userInfo", JSON.stringify(res.data.data));
+          //跳转到个人中心页面
           this.$router.push("/user");
         }
       });

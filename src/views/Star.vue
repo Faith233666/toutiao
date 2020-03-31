@@ -1,23 +1,35 @@
 <template>
   <div class="box">
     <VmTop title="我的收藏" showHome="false"></VmTop>
-    <div class="star" v-for='(item,index) in userInfo' :key='index'>
+    <div class="star">
       <div class="plan1">
         <div>
-          <p>{{item.title}}</p>
+          <p>林志玲穿透视黑纱裙米兰看秀腹部微隆显孕味</p>
           <span>火星时报 52跟帖</span>
         </div>
-        <img :src="$axios.defaults.baseURL+item.cover[0].url" alt />
+        <img src="../assets/80296589_p0_master1200.jpg" alt />
       </div>
-      <!-- <div class="plan2">
-        <p>撒的仅仅是家世界阿萨德静安寺加点水就是点击ssssss的三骄</p>
+    </div>
+    <div class="star">
+      <div class="plan2">
+        <p>林志玲穿透视黑纱裙米兰看秀腹部微隆显孕味</p>
         <img
           src="../assets/80296589_p0_master1200.jpg"
           v-for="(item,index) in [1,1,1]"
           :key="index"
         />
         <span>火星时报 52跟帖</span>
-      </div> -->
+      </div>
+    </div>
+    <div class="star">
+      <div class="plan3">
+        <p>林志玲穿透视黑纱裙米兰看秀腹部微隆显孕味</p>
+        <div class="video">
+          <div class="shipin"><i class='iconfont iconshipin'></i></div>
+         <img src="../assets/80296589_p0_master1200.jpg" alt="">
+        </div>
+        <span>火星时报 52跟帖</span>
+      </div>
     </div>
   </div>
 </template>
@@ -25,26 +37,27 @@
 <script>
 import VmTop from "@/components/VmTop";
 export default {
-  data()
-  {
-    return{
-       userJson:'',
-       userInfo:''
-    }
+  data() {
+    return {
+      userJson: "",
+      userInfo: ""
+    };
   },
-  mounted()
-  {
-    let userJson=JSON.parse(localStorage.getItem('userInfo'));
-    this.userJson=userJson;
+  mounted() {
+    //获取本地数据到data的userJson中
+    let userJson = JSON.parse(localStorage.getItem("userInfo"));
+    this.userJson = userJson;
+    //调用收藏文章列表接口，渲染数据
     this.$axios({
-      url:'/user_star',
-      headers:{
-        Authorization:this.userJson.token
+      url: "/user_star",
+      headers: {
+        Authorization: this.userJson.token
       }
-    }).then(res=>{
+    }).then(res => {
       console.log(res);
-      this.userInfo=res.data.data;
-    })
+      //获取收藏文章到data的userInfo中
+      this.userInfo = res.data.data;
+    });
   },
   components: {
     VmTop
@@ -117,6 +130,52 @@ export default {
       }
       span {
         display: block;
+        margin-top: 10/360 * 100vw;
+        font-size: 12/360 * 100vw;
+        color: #8c8989;
+      }
+    }
+    .plan3 {
+      p {
+        margin-bottom: 10/360 * 100vw;
+        /*1. 超出的部分隐藏 */
+        overflow: hidden;
+        /*2. 文字用省略号替代超出的部分 */
+        text-overflow: ellipsis;
+        /* 3. 弹性伸缩盒子模型显示 */
+        display: -webkit-box;
+        /* 4. 限制在一个块元素显示的文本的行数 */
+        -webkit-line-clamp: 2;
+        /* 5. 设置或检索伸缩盒对象的子元素的排列方式 */
+        -webkit-box-orient: vertical;
+      }
+      .video{
+        position: relative;
+        .shipin{
+          position: absolute;
+          top:50%;
+          left:50%;
+          transform: translateX(-25/360*100vw) translateY(-25/360*100vw);
+          width: 50/360*100vw;
+          height: 50/360*100vw;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background: rgba(0,0,0,0.2);
+          border-radius: 50%;
+          i{
+            font-size: 35/360*100vw;
+            color: white;
+          }
+        }
+        img{
+          width: 100%;
+          height: 140/360*100vw;
+          object-fit: cover;
+        }
+      }
+      span{
+          display: block;
         margin-top: 10/360 * 100vw;
         font-size: 12/360 * 100vw;
         color: #8c8989;

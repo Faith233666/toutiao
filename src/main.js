@@ -5,7 +5,7 @@ import App from './App.vue'
 //路由对象
 import router from './router'
 //vatnt-ui组件库
-import Vant from 'vant';
+import Vant, { Toast } from 'vant';
 //导入axios
 import axios from 'axios';
 
@@ -22,23 +22,29 @@ Vue.use(Vant);
 Vue.config.productionTip = false
 
 //路由守卫
-router.beforeEach((to,from,next)=>{
-  if(to.path=='/user')
-  {
-    let userinfo=JSON.parse(localStorage.getItem('userInfo'))||{};
-    if(userinfo.token)
-    {
+router.beforeEach((to, from, next) => {
+  if (to.meta.goto) {
+    let userinfo = JSON.parse(localStorage.getItem('userInfo')) || {};
+    if (userinfo.token) {
       next();
-    }
-    else
-    {
+    } else {
       next('/login');
     }
-  }else
-  {
+  } else {
     next();
   }
 })
+//错误拦截
+//github 地址https://github.com/axios/axios#interceptors
+axios.interceptors.response.use(res => {
+  return res;
+}, error => {
+  const{statusCode,message}=error.response.data;
+  if(statusCode==400)
+  {
+    Toast.fail(message);
+  }
+});
 //创建一个根实例
 //.$mount('#app)相当于el配置，指定id为app的元素作为模板
 new Vue({

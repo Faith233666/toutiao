@@ -4,7 +4,7 @@
     <div class="posts">
       <div class="pub" v-for="(item,index) in userInfo" :key="index">
         <div class="fromDate">{{moment(item.create_date).format('YYYY-MM-DD hh:mm')}}</div>
-        <div class="reply" v-if='item.parent'>
+        <div class="reply" v-if="item.parent">
           <div>回复：{{item.parent.user.nickname}}</div>
           <p>{{item.parent.content}}</p>
         </div>
@@ -32,6 +32,7 @@ export default {
   mounted() {
     let userJson = JSON.parse(localStorage.getItem("userInfo"));
     this.userJson = userJson;
+    //调用用户评论列表接口，渲染数据
     this.$axios({
       url: "/user_comments",
       headers: {
@@ -39,6 +40,7 @@ export default {
       }
     }).then(res => {
       console.log(res);
+      //获取用户评论数据到data的userInfo中
       this.userInfo = res.data.data;
     });
   },

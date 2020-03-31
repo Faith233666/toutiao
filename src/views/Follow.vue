@@ -29,14 +29,17 @@ export default {
     VmTop
   },
   mounted() {
+    //将本地数据存入data的userJson中
     let userJson = JSON.parse(localStorage.getItem("userInfo"));
     this.userJson = userJson;
+    //调用关注用户接口，渲染数据
     this.$axios({
       url: "/user_follows/",
       headers: {
         Authorization: userJson.token
       }
     }).then(res => {
+      //将关注用户数据存入data中的follows数组中
       this.follows = res.data.data;
     });
   },
@@ -50,7 +53,7 @@ export default {
         })
         .then(() => {
           this.$axios({
-            //根据id发送请求
+            //根据id发送取消关注接口的请求
             url: "/user_unfollow/" + id,
             headers: {
               Authorization: this.userJson.token
