@@ -2,10 +2,10 @@
   <div class="PostItem3">
   <div class="star">
       <div class="plan3">
-        <p>林志玲穿透视黑纱裙米兰看秀腹部微隆显孕味</p>
+        <p>{{data.title}}</p>
         <div class="video">
           <div class="shipin"><i class='iconfont iconshipin'></i></div>
-         <img src="../assets/80296589_p0_master1200.jpg" alt="">
+         <img :src="$axios.defaults.baseURL+data.cover[0].url" alt="">
         </div>
         <span>火星时报 52跟帖</span>
       </div>
@@ -15,7 +15,7 @@
 
 <script>
 export default {
-
+ props:['data']
 }
 </script>
 

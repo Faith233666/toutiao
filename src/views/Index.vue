@@ -16,20 +16,20 @@
     <div class="tab">
       <!-- Tab标签页 组件 -->
       <van-tabs v-model="active" swipeable sticky>
-        <van-tab v-for="(item,index) in categories" :title="item" :key="index"></van-tab>
+        <van-tab v-for="(item,index) in categories" :title="item.name" :key="index"></van-tab>
       </van-tabs>
     </div>
     <!-- list列表 组件 -->
+    <!-- immediate-check这个属性可以阻止list组件默认就加载一次 -->
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
-     <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-       <!-- 第一种规则，单张图片 -->
-    <PostItem1 v-for="item in list" :key="item" ></PostItem1>
+     <van-list :immediate-check="false" v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+      <div v-for='(item,index) in list' :key='index'>
+       <PostItem1 :data='item' v-if='item.type==1&&item.cover.length==1'></PostItem1>
+       <PostItem2 :data='item' v-if='item.type==1&&item.cover.length==3'></PostItem2>
+       <PostItem3 :data='item' v-if='item.type==2'></PostItem3>
+      </div>
       </van-list>
     </van-pull-refresh>
-    <!-- 第二种规则，三张图片 -->
-    <!-- <PostItem2></PostItem2> -->
-    <!-- 第三种规则，视频 -->
-    <!-- <PostItem3></PostItem3> -->
   </div>
 </template>
 
@@ -38,12 +38,42 @@ import PostItem1 from '@/components/PostItem1'
 import PostItem2 from '@/components/PostItem2'
 import PostItem3 from '@/components/PostItem3'
 export default {
+  mounted()
+  {
+     let localCategories=JSON.parse(localStorage.getItem('categories'))||{};
+     let {token}=JSON.parse(localStorage.getItem('userInfo'))||{};
+     if(localCategories)
+     {
+     if(localCategories[this.active].name=='关注'&&!token)
+     {
+      this.reload();
+     }
+     else if(localCategories[this.active].name!='关注'&&token)
+     {
+       this.reload(token);
+     }
+     else{
+        this.reload();
+     }
+   }
+   this.$axios({
+     url:'/post',
+     params:{
+       pageIndex:1,
+       pageSize:5,
+       category:this.categoryId
+     }
+   }).then(res=>{
+     const{data}=res.data;
+     this.list=data;
+   })
+   
+  },
   data()
   {
     return{
       //tab栏数据
-      categories: ['关注','娱乐','体育','汽车','房产','关注',
-        '关注','娱乐','体育','汽车','房产','关注', "∨"],
+      categories: [],
       //判断点击栏目 与数组索引相同
       active:0,
       //需要渲染的条数
@@ -53,7 +83,8 @@ export default {
       //是否已加载完成，加载完成后不再触发load事件
       finished: false,
       //是否下拉刷新 下拉后为true
-      refreshing: false
+      refreshing: false,
+      categoryId:999
     }
   },
   //三种规则组件
@@ -73,24 +104,52 @@ export default {
     }
   },
   methods:{
+    reload(token)
+    {
+      const config={
+        url:'/category'
+      }
+      if(token)
+      {
+        config.headers={Authorization:token}
+      }
+       //请求栏目列表
+      this.$axios(config).then(res=>{
+        const {data}=res.data;
+        localStorage.getItem('categories',JSON.stringify(data));
+        data.push({name:'V'});
+        this.categories=data;
+        this.addPageIndex();
+      })
+    },
+    addPageIndex()
+    {
+      this.categories=this.categories.map(v=>{
+         v.pageIndex=1;
+         return v;
+      })
+     console.log(this.categories);
+    },
     onLoad() {
-      // 异步更新数据
-      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
       setTimeout(() => {
-        if (this.refreshing) {
-          this.list = [];
-          this.refreshing = false;
+      this.categories[this.active].pageIndex+=1;
+       this.$axios({
+         url:'/post',
+         params:{
+           pageIndex:this.categories[this.active].pageIndex,
+           pageSize:5,
+           category:this.categoryId
+         }
+       }).then(res=>{
+        const {data,total}=res.data;
+        this.list=[...this.list,...data];
+        this.loading=false;
+        if(this.list.length==total)
+        {
+          this.finished=true;
         }
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length+1);
-        }
-        // 加载状态结束
-        this.loading = false;
-        // 数据全部加载完成
-        if (this.list.length >= 30) {
-          this.finished = true;
-        }
-      },3000);
+       })
+      }, 3000);
     },
     onRefresh() {
       // 清空列表数据
@@ -142,6 +201,10 @@ export default {
       color: white;
     }
   }
+  /deep/ .van-tabs__wrap
+  {
+    padding-right: 20/360*100vw;
+  }
   /deep/ .van-tabs__nav{
     position: static;
      background: #eee;
@@ -165,5 +228,4 @@ export default {
     }
 }
 }
-
 </style>

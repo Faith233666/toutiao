@@ -69,9 +69,6 @@ const routes = [{
     //组件的懒加载
     //@表示src的别名
     component: () => import("@/views/Index"),
-    meta: {
-      goto: true
-    }
   }
 ]
 const router = new VueRouter({

@@ -2,10 +2,10 @@
   <div class="PostItem2">
   <div class="star">
         <div class="plan2">
-        <p>林志玲穿透视黑纱裙米兰看秀腹部微隆显孕味</p>
+        <p>{{data.title}}</p>
         <img
-          src="../assets/80296589_p0_master1200.jpg"
-          v-for="(item,index) in [1,1,1]"
+          :src="$axios.defaults.baseURL+item.url"
+          v-for="(item,index) in data.cover"
           :key="index"
         />
         <span>火星时报 52跟帖</span>
@@ -16,7 +16,7 @@
 
 <script>
 export default {
-
+ props:['data']
 }
 </script>
 

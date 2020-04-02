@@ -22,6 +22,9 @@ Vue.use(Vant);
 Vue.config.productionTip = false
 
 //路由守卫
+//to表示去到哪个页面
+//from表示来自哪个页面
+//next 必须要调用,相当于Node.js中间件,调用了才会加载后面的内容
 router.beforeEach((to, from, next) => {
   if (to.meta.goto) {
     let userinfo = JSON.parse(localStorage.getItem('userInfo')) || {};

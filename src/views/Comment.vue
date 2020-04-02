@@ -51,8 +51,9 @@ export default {
 </script>
 
 <style lang='less' scoped>
+@vw:3.6vw;
 .box {
-  font-size: 12/360 * 100vw;
+  font-size: 12/360*100vw;
   .posts {
     .pub {
       padding: 15/360 * 100vw;
