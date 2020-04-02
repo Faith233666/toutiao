@@ -4,7 +4,7 @@
       <div class="plan1">
         <div>
           <p>{{data.title}}</p>
-          <span>火星时报 52跟帖</span>
+          <span>{{data.user.nickname}} {{data.comment_length}}跟帖</span>
         </div>
         <img :src="$axios.defaults.baseURL+data.cover[0].url" alt />
       </div>

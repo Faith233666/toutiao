@@ -8,7 +8,7 @@
           v-for="(item,index) in data.cover"
           :key="index"
         />
-        <span>火星时报 52跟帖</span>
+        <span>{{data.user.nickname}} {{data.comment_length}}跟帖</span>
       </div>
   </div>
   </div>
