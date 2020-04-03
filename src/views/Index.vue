@@ -53,7 +53,7 @@ data()
       // finished: false,
       //是否下拉刷新 下拉后为true
       refreshing: false,
-      categoryId:999,
+      // categoryId:999
     }
   },
   mounted()
@@ -67,26 +67,24 @@ data()
      if(localCategories[0].name=='关注'&&!token)
      {
       this.reload();
-      return;
      }
      if(localCategories[0].name!='关注'&&token)
      {
        this.reload(token);
-       return;
      }
-    this.categories = localCategories;
-    this.addPagelist();
    }
    else{
-      this.reload(token);
+      this.reload();
     }
+    this.categories = localCategories;
+    this.addPagelist();
     //调用文章列表接口，pageIndex第一页，pageSize五条数据,category为头条的id
     this.$axios({
       url:'/post',
       params:{
         pageIndex:1,
         pageSize:5,
-        category:this.categoryId
+        category:this.categories[this.active].id
       }
     }).then(res=>{
       //结构出数据
