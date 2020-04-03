@@ -12,7 +12,7 @@
         <span class="iconfont iconwode"></span>
       </div>
     </div>
-      <!--  Tab标签页 组件  -->
+      <!--   Tab标签页 组件   -->
       <!-- 结构如下 vab-tabs>vab-tab-van-pull-refersh>van-list>div -->
       <van-tabs v-model="active" swipeable sticky @scroll="handleScroll">
        <!--  tab栏切换  -->
