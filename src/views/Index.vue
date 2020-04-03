@@ -14,18 +14,18 @@
     </div>
       <!-- Tab标签页 组件 -->
       <!-- 结构如下 vab-tabs>vab-tab-van-pull-refersh>van-list>div -->
-      <van-tabs v-model="active" swipeable sticky>
+      <van-tabs v-model="active" swipeable sticky @scroll="handleScroll">
        <!-- tab栏切换 -->
       <van-tab v-for="(item,index) in categories" :title="item.name" :key="index">
     <!-- list列表 组件 -->
     <!-- immediate-check这个属性可以阻止list组件默认就加载一次 -->
         <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
-        <van-list :immediate-check="false" v-model="categories[active].loading" :finished="categories[active].finished" finished-text="没有更多了" @load="onLoad">
+        <van-list :immediate-check="false" v-model="item.loading" :finished="item.finished" finished-text="没有更多了" @load="onLoad">
           <div v-for='(Subitem,Subindex) in item.posts' :key='Subindex'>
           <PostItem1 :data='Subitem' v-if='Subitem.type==1&&Subitem.cover.length==1'></PostItem1>
           <PostItem2 :data='Subitem' v-if='Subitem.type==1&&Subitem.cover.length==3'></PostItem2>
           <PostItem3 :data='Subitem' v-if='Subitem.type==2'></PostItem3>
-              </div>
+            </div>
            </van-list>
          </van-pull-refresh>
       </van-tab>
@@ -53,6 +53,7 @@ data()
       // finished: false,
       //是否下拉刷新 下拉后为true
       refreshing: false,
+      token:""
       // categoryId:999
     }
   },
@@ -62,6 +63,7 @@ data()
     //本地存储为空默认返回null,null的布尔值为false
      let localCategories=JSON.parse(localStorage.getItem('categories'));
      let {token}=JSON.parse(localStorage.getItem('userInfo'))||{};
+     this.token=token;
      if(localCategories)
      {
      if(localCategories[0].name=='关注'&&!token)
@@ -72,7 +74,7 @@ data()
      {
        this.reload(token);
      }
-     //当页面没有token也没有name==关注的时候执行的分支
+     //当页面有token，name也等于关注的时候执行的分支
      else{
       this.categories = localCategories;
       this.addPagelist();
@@ -113,8 +115,13 @@ data()
       {
         this.$router.push('/列表页');
       }
-      //列表刷新
+      //当栏目切换的时候，需要重新请求当前栏目的内容
       this.getList();
+    // scrollTo() 方法可把内容滚动到指定的坐标 第一个参数为X轴，第二个参数为Y轴
+    //加定时器，等待文章渲染完成后才进行滚动
+     setTimeout(() => {
+         window.scrollTo(0,this.categories[this.active].scrollY);
+     }, 20);
     }
   },
   methods:{
@@ -152,6 +159,7 @@ data()
          v.loading=false;
          //是否加载完成
          v.finished=false;
+         v.scrollY=0;
          return v;
       })
       //页面一开始的时候执行一次加载
@@ -165,22 +173,24 @@ data()
     //封装一个请求文章列表的方法
     getList()
     {
-      //当加载完成的时候，跳出函数
-      if(this.categories[this.active].finished)
-      {
-        return;
-      }
       //获取当前tab栏的id和页码
-      const {pageIndex,id}=this.categories[this.active];
-      //调用文章列表接口,赋值当前的id和页码
-        this.$axios({
+      const {pageIndex,id,finished,name}=this.categories[this.active];
+      //当加载完成的时候，跳出函数
+      if(finished==true) {return};
+      const config={
          url:'/post',
          params:{
            pageIndex:pageIndex,
            pageSize:5,
            category:id
          }
-       }).then(res=>{
+       };
+       if(name=='关注')
+       {
+         config.headers={Authorization:this.token}
+       }
+      //调用文章列表接口,赋值当前的id和页码
+        this.$axios(config).then(res=>{
         const {data,total}=res.data;
         //把新的文章合并到原来的文件中
         this.categories[this.active].posts=[...this.categories[this.active].posts,...data];
@@ -194,7 +204,7 @@ data()
           //加载完成
          this.categories[this.active].finished=true;
         }
-       })   
+       }) 
     },
     onRefresh() {
       // // 清空列表数据
@@ -203,6 +213,16 @@ data()
       // // 将 loading 设置为 true，表示处于正在加载状态
       // this.loading = true;
       this.onLoad();
+    },
+    handleScroll(data)
+    {
+      //因为栏目不管是从本地获取还是接口获取，都需要时间
+      //要等this.categories有值的时候才设置滚动条的高度
+      if(this.categories.length==0) {return}
+      //scrollTop是滚动条的距离
+       const {scrollTop}=data;
+       //把滚动条的高度设置为当前栏目下的scrollY
+       this.categories[this.active].scrollY=scrollTop;
     }
   }
 };
