@@ -21,10 +21,10 @@
     <!-- immediate-check这个属性可以阻止list组件默认就加载一次 -->
         <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
         <van-list :immediate-check="false" v-model="categories[active].loading" :finished="categories[active].finished" finished-text="没有更多了" @load="onLoad">
-          <div v-for='(item,index) in categories[active].posts' :key='index'>
-          <PostItem1 :data='item' v-if='item.type==1&&item.cover.length==1'></PostItem1>
-          <PostItem2 :data='item' v-if='item.type==1&&item.cover.length==3'></PostItem2>
-          <PostItem3 :data='item' v-if='item.type==2'></PostItem3>
+          <div v-for='(Subitem,Subindex) in item.posts' :key='Subindex'>
+          <PostItem1 :data='Subitem' v-if='Subitem.type==1&&Subitem.cover.length==1'></PostItem1>
+          <PostItem2 :data='Subitem' v-if='Subitem.type==1&&Subitem.cover.length==3'></PostItem2>
+          <PostItem3 :data='Subitem' v-if='Subitem.type==2'></PostItem3>
               </div>
            </van-list>
          </van-pull-refresh>
@@ -68,32 +68,36 @@ data()
      {
       this.reload();
      }
-     if(localCategories[0].name!='关注'&&token)
+    else if(localCategories[0].name!='关注'&&token)
      {
        this.reload(token);
      }
-   }
+     //当页面没有token也没有name==关注的时候执行的分支
+     else{
+      this.categories = localCategories;
+      this.addPagelist();
+     }
+     }
+     //如果没有本地存储，重新请求
    else{
       this.reload();
     }
-    this.categories = localCategories;
-    this.addPagelist();
     //调用文章列表接口，pageIndex第一页，pageSize五条数据,category为头条的id
-    this.$axios({
-      url:'/post',
-      params:{
-        pageIndex:1,
-        pageSize:5,
-        category:this.categories[this.active].id
-      }
-    }).then(res=>{
-      //结构出数据
-      const{data}=res.data;
-      //赋值给当前页面的posts数组
-      this.categories[this.active].posts=data;
-      //重新赋值来让页面刷新
-      this.categories = [...this.categories];
-    })
+    // this.$axios({
+    //   url:'/post',
+    //   params:{
+    //     pageIndex:1,
+    //     pageSize:5,
+    //     category:this.categories[this.active].id
+    //   }
+    // }).then(res=>{
+    //   //结构出数据
+    //   const{data}=res.data;
+    //   //赋值给当前页面的posts数组
+    //   this.categories[this.active].posts=data;
+    //   //重新赋值来让页面刷新
+    //   this.categories = [...this.categories];
+    // })
   },
   //三种规则组件
   components:{
@@ -150,6 +154,8 @@ data()
          v.finished=false;
          return v;
       })
+      //页面一开始的时候执行一次加载
+      this.getList();
     },
     onLoad() {
       //加载时触发
@@ -183,7 +189,7 @@ data()
         // 赋值的方式页面才会更新
          this.categories = [...this.categories];
         //是否是最后一页
-        if( this.categories[this.active].posts.length==total)
+        if(this.categories[this.active].posts.length==total)
         {
           //加载完成
          this.categories[this.active].finished=true;
