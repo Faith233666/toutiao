@@ -75,6 +75,12 @@ const routes = [{
     //组件的懒加载
     //@表示src的别名
     component: () => import("@/views/Category"),
+  },
+  {
+    path: '/search',
+    //组件的懒加载
+    //@表示src的别名
+    component: () => import("@/views/Search"),
   }
 ]
 const router = new VueRouter({
