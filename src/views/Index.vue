@@ -2,21 +2,23 @@
   <div class="box">
     <div class="header">
       <div class="logo">
-        <i class="iconfont iconnew"></i>
+        <i class="iconfont iconnew" @click='$router.push("/login")'></i>
       </div>
       <div class="search">
         <i class="iconfont iconsearch"></i>
         <span>搜索新闻</span>
       </div>
       <div class="user">
-        <span class="iconfont iconwode"></span>
+        <router-link to='/user'>
+          <span class="iconfont iconwode"></span>
+        </router-link>
       </div>
     </div>
       <!--   Tab标签页 组件   -->
       <!-- 结构如下 vab-tabs>vab-tab-van-pull-refersh>van-list>div -->
       <van-tabs v-model="active" swipeable sticky @scroll="handleScroll">
        <!-- tab栏切换 -->
-      <van-tab v-for="(item,index) in categories" :title="item.name" :key="index">
+      <van-tab v-for="(item,index) in categories" :title="item.name" :key="index" v-if='item.is_top==1||item.name=="V"'>
     <!-- list列表 组件 -->
     <!-- immediate-check这个属性可以阻止list组件默认就加载一次 -->
         <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
@@ -110,8 +112,11 @@ data()
   watch:{
     active()
     {
+      const arr=this.categories.filter(item=>{
+        return item.is_top==1 || item.name=='V'
+      })
       //当点击了下箭头的时候，路由跳转
-      if(this.active===this.categories.length-1)
+      if(this.active===arr.length-1)
       {
         this.$router.push('/列表页');
       }
@@ -160,6 +165,7 @@ data()
          //是否加载完成
          v.finished=false;
          v.scrollY=0;
+         v.isload=false;
          return v;
       })
       //页面一开始的时候执行一次加载
@@ -167,16 +173,21 @@ data()
     },
     onLoad() {
       //加载时触发
-      this.categories[this.active].pageIndex+=1;
       this.getList();
     },
     //封装一个请求文章列表的方法
     getList()
     {
       //获取当前tab栏的id和页码
-      const {pageIndex,id,finished,name}=this.categories[this.active];
+      const {pageIndex,id,finished,name,isload}=this.categories[this.active];
+      //如果正在加载，直接返回
+      if(isload) return;
+      //如果没有加载，设置为正在加载
+      this.categories[this.active].isload=true;
+      //给当前栏目页数加1
+      this.categories[this.active].pageIndex+=1;
       //当加载完成的时候，跳出函数
-      if(finished==true) {return};
+      if(finished) return;
       const config={
          url:'/post',
          params:{
@@ -204,6 +215,8 @@ data()
           //加载完成
          this.categories[this.active].finished=true;
         }
+         //加载完毕后将isload的状态设置为false
+         this.categories[this.active].isload=false;
        }) 
     },
     onRefresh() {

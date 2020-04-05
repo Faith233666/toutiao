@@ -13,7 +13,12 @@ import axios from 'axios';
 //绑定到原型,加上之后就可以在组件中通过this.$axios来调用请求方法
 Vue.prototype.$axios = axios;
 
-axios.defaults.baseURL = "http://localhost:3000";
+//本地地址
+axios.defaults.baseURL = "http://127.0.0.1:3000";
+//局域网服务器
+// axios.defaults.baseURL = "http://192.168.0.106:3000";
+//线上地址
+// axios.defaults.baseURL = "http://hmtoutiao-api.atlansic.com";
 
 //注册Vant插件，Vue.use是注册插件
 Vue.use(Vant);
