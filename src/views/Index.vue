@@ -118,7 +118,7 @@ data()
       //当点击了下箭头的时候，路由跳转
       if(this.active===arr.length-1)
       {
-        this.$router.push('/列表页');
+        this.$router.push('/category');
       }
       //当栏目切换的时候，需要重新请求当前栏目的内容
       this.getList();
