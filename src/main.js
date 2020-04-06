@@ -9,7 +9,7 @@ import Vant, { Toast } from 'vant';
 //导入axios
 import axios from 'axios';
 
-
+let app;
 //绑定到原型,加上之后就可以在组件中通过this.$axios来调用请求方法
 Vue.prototype.$axios = axios;
 
@@ -48,14 +48,29 @@ axios.interceptors.response.use(res => {
   return res;
 }, error => {
   const{statusCode,message}=error.response.data;
-  if(statusCode==400)
+  if(statusCode===400)
   {
     Toast.fail(message);
+  }
+  if(statusCode===403)
+  {
+    //app是Vue的实例对象，可以使用里面的this.$router.replace方法
+    Toast.fail(message);
+    // 跳转到登录页, push方法的参数除了可以直接写一个字符串还可以写一个对象
+		// 对象里面的path属性表示路径，query表单问号的参数
+    // 比如这完整的路径其实 /login?return_url=/posts/1
+    app.$router.push({
+      path:'/login',
+      query:{
+        return_url:app.$route.path
+      }
+    });
+    return Promise.reject(error)
   }
 });
 //创建一个根实例
 //.$mount('#app)相当于el配置，指定id为app的元素作为模板
-new Vue({
+app=new Vue({
   //路由对象
   router,
   //加载第一个子组件，最底层的组件，(写法是固定的)

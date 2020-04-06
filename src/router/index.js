@@ -81,6 +81,12 @@ const routes = [{
     //组件的懒加载
     //@表示src的别名
     component: () => import("@/views/Search"),
+  },
+  {
+    path: '/post/:id',
+    //组件的懒加载
+    //@表示src的别名
+    component: () => import("@/views/Post"),
   }
 ]
 const router = new VueRouter({

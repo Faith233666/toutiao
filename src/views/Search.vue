@@ -1,11 +1,16 @@
 <template>
   <div class="box">
-      <div class="searchKey" :style="toggle==false?'display:none':'display:block'">
-        <ul>
+      <div class="searchKey" v-if='toggle'>
+        <!-- <ul>
           <li>美女的妙用<i class="iconfont iconjiantou1"></i></li>
           <li>美女的妙用<i class="iconfont iconjiantou1"></i></li>
           <li>美女的妙用<i class="iconfont iconjiantou1"></i></li>
-        </ul>
+        </ul> -->
+       <div v-for='(item,index) in post' :key='index'>
+        <PostItem1 :data='item' v-if='item.type==1&&item.cover.length==1'></PostItem1>
+        <PostItem2 :data='item' v-if='item.type==1&&item.cover.length==3'></PostItem2>
+        <PostItem3 :data='item' v-if='item.type==2'></PostItem3>
+       </div>
       </div>
       <div class="header">
       <div class="logo">
@@ -13,53 +18,87 @@
       </div>
       <div class="search">
         <i class="iconfont iconsearch"></i>
-        <input type="text" @focus='focusClick' @blur='blurClick'>
+        <input type="text" v-model="value" autofocus @keyup.enter='handleClick'>
       </div>
-         <span>搜索</span>
+         <span @click='handleClick'>搜索</span>
     </div>
     <div class="history">
-     <h5>历史记录</h5>
+     <h5>历史记录<i @click='removeHistory'>X</i></h5>
      <ul>
-       <li>美女</li>
-       <li>美女</li>
-       <li>美女</li>
-       <li>美女</li>
-       <li>美女</li>
-       <li>美女</li>
-       <li>美女</li>
-       <li>美女</li>
-       <li>美女</li>
-       <li>美女</li>
-       <li>美女</li>
-       <li>美女</li>
-       <li>美女</li>
-       <li>美女</li>
-       <li>美女</li>
-       <li>美女</li>
-       <li>美女</li>
+       <li v-for='(item,index) in history' :key='index' @click='itemClick(item)'>{{item}}</li>  
      </ul>
     </div>
 </div>
 </template>
 
 <script>
+import PostItem1 from '@/components/PostItem1'
+import PostItem2 from '@/components/PostItem2'
+import PostItem3 from '@/components/PostItem3'
 export default {
 data()
 {
   return{
-    toggle:false
+    toggle:false,
+    value:"",
+    history:JSON.parse(localStorage.getItem('history'))||[],
+    post:""
   }
 },
+watch:
+{
+   value()
+   {
+     if(this.value=="")
+     {
+       this.toggle=false;
+     }
+   }
+},
 methods:{
-  focusClick()
+  //搜索关键字
+  handleClick()
   {
-    this.toggle=true;
+    if(this.value=="")return;
+     this.history.unshift(this.value);
+     //数组去重
+     this.history=[...new Set(this.history)];
+     localStorage.setItem('history',JSON.stringify(this.history));
+     this.getlist();
   },
-  blurClick()
+  //清除本地的历史记录
+  removeHistory()
   {
-    this.toggle=false;
+    this.history=[];
+    localStorage.removeItem('history');
+  },
+  //点击关键字搜索
+  itemClick(item)
+  {
+    this.value=item;
+    this.getlist();
+  },
+  //调用接口搜索
+  getlist()
+  {
+     this.$axios({
+       url:"/post_search",
+       params:{
+         keyword:this.value
+       }
+     }).then(res=>{
+       this.toggle=true;
+       const {data}=res.data;
+       this.post=data;
+     })
   }
-}
+},
+//三种规则组件
+components:{
+    PostItem1,
+    PostItem2,
+    PostItem3
+  },
 }
 </script>
 
@@ -113,6 +152,8 @@ methods:{
  }
  .history{
    h5{
+     display: flex;
+     justify-content: space-between;
      margin:10/@vw 0 10/@vw;
    }
    ul{

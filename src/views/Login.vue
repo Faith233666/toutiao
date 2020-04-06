@@ -62,8 +62,10 @@ export default {
           this.$toast.success(res.data.message);
           //将返回的数据存入本地存储，以便后面使用
           localStorage.setItem("userInfo", JSON.stringify(res.data.data));
-          //跳转到个人中心页面
-          this.$router.push("/user");
+          //判断地址栏有没有return_url参数
+          const {return_url}=this.$route.query;
+          this.$router.replace(return_url||'/user');
+
         }
       });
     }
