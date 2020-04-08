@@ -19,8 +19,8 @@
         <p v-html="post.content"></p>
       </div>
       <div class="fun">
-        <div class="praise">
-          <i class="iconfont icondianzan"></i>112
+        <div class="praise" @click='praiseClick'>
+          <i class="iconfont icondianzan"></i>{{post.like_length}}
         </div>
         <div class="transpond">
           <i class="iconfont iconweixin"></i>微信
@@ -34,9 +34,9 @@
     <div class="footer">
       <div class="writeFollow">写跟帖</div>
       <div class="footerIcons">
-      <div class="message">{{post.comment_length}}</div>
+      <div class="message">{{post.comment_length>100?'99':post.comment_length}}</div>
        <i class="iconfont iconpinglun-"></i>
-        <i class="iconfont iconshoucang"></i>
+        <i class="iconfont iconshoucang" @click="collectClick" :class="post.has_star?'active':''"></i>
         <i class="iconfont iconfenxiang"></i>
       </div>
     </div>
@@ -56,13 +56,17 @@ export default {
            }
          },
          moment,
+         token:"",
+         id:""
      }
   },
   mounted()
   {
-    const {token}=JSON.parse(localStorage.getItem('userInfo'));
-    //获取到url地址的动态id
     let {id}=this.$route.params;
+    const {token}=JSON.parse(localStorage.getItem('userInfo'))||{};
+    this.token=token;
+    //获取到url地址的动态id
+    //需要传递栏目的id
     let config={url:'/post/'+id}
     if(token)
     {
@@ -72,40 +76,80 @@ export default {
     }
     this.$axios(config).then(res=>{
       const {data}=res.data;
+      // 替换文字内容里面的本地路径，把localhost:3000替换成基准路径，
+      // “这个功能只对使用线上接口有效果”，如果使用的是本地的后台，不替换也可以
+      data.content=data.content.replace(
+        /http:\/\/localhost:3000/ig,
+        this.$axios.defaults.baseURL
+      )
       this.post=data;
       localStorage.setItem('postJson',JSON.stringify(data));
     })
   },
   methods:{
+    //关注的点击事件
     followClick(item)
     { 
-      const {token}=JSON.parse(localStorage.getItem('userInfo'))||{};
       if(item)
       {
-          let {id}=this.$route.params;
           this.$axios({
-          url:'/user_unfollow/'+id,
+         //需要传递用户的id
+          url:'/user_unfollow/'+this.post.user.id,
           headers:{
-            Authorization:token
+            Authorization:this.token
           }
           }).then(res=>{
-            console.log(res);
             this.post.has_follow=false;
             this.$toast.success('取消关注成功');
           })
        }
       else{
-          let {id}=this.$route.params;
           this.$axios({
-          url:'/user_follows/'+id,
+          url:'/user_follows/'+this.post.user.id,
           headers:{
-            Authorization:token
+            Authorization:this.token
           }
         }).then(res=>{
             this.post.has_follow=true;
             this.$toast.success('关注成功');
         })
       }
+    },
+    //点赞的点击事件
+    praiseClick()
+    {
+      this.$axios({
+          url:'/post_like/'+this.post.id,
+          headers:{
+            Authorization:this.token
+          }
+          }).then(res=>{
+           const {message}=res.data;
+           this.$toast.success(message);
+           this.post.has_like=!this.post.has_like;
+           if(this.post.has_like)
+           {
+             this.post.like_length+=1;
+           }
+           else
+           {
+             this.post.like_length-=1;
+           }
+          })
+    },
+    //收藏的点击事件
+    collectClick()
+    {
+       this.$axios({
+          url:'/post_star/'+this.post.id,
+          headers:{
+            Authorization:this.token
+          }
+          }).then(res=>{
+           const {message}=res.data;
+           this.$toast.success(message);
+           this.post.has_star=!this.post.has_star;
+          })
     }
   }
 };
@@ -113,10 +157,6 @@ export default {
 
 <style lang="less" scoped>
 @vw: 3.6vw;
-.active{
-  background: red;
-  color:white;
-}
 .box {
   font-size: 14 / @vw;
   .header {
@@ -142,10 +182,15 @@ export default {
       .follow {
         font-size: 10 / @vw;
         padding: 5 / @vw 20 / @vw;
-        color: black;
+        background: red;
+        color:white;
         border:1px solid black;
         border-radius: 50 / @vw;
       }
+      .active{
+      background: none;
+      color: black;
+    }
     }
     .title {
       padding: 0 10 / @vw;
@@ -246,6 +291,9 @@ export default {
          transform: scale(2);
          margin-right:30/@vw;
        }
+      .active{
+       color: red;
+      }
     }
   }
 }

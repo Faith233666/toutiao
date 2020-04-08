@@ -14,11 +14,11 @@ let app;
 Vue.prototype.$axios = axios;
 
 //本地地址
-axios.defaults.baseURL = "http://127.0.0.1:3000";
+// axios.defaults.baseURL = "http://127.0.0.1:3000";
 //局域网服务器
 // axios.defaults.baseURL = "http://192.168.0.106:3000";
 //线上地址
-// axios.defaults.baseURL = "http://hmtoutiao-api.atlansic.com";
+axios.defaults.baseURL = "http://hmtoutiao-api.atlansic.com";
 
 //注册Vant插件，Vue.use是注册插件
 Vue.use(Vant);

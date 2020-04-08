@@ -1,4 +1,5 @@
 <template>
+<router-link :to="'/post/'+data.id">
   <div class="PostItem2">
   <div class="star">
         <div class="plan2">
@@ -12,6 +13,7 @@
       </div>
   </div>
   </div>
+</router-link>
 </template>
 
 <script>

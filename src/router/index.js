@@ -87,7 +87,14 @@ const routes = [{
     //组件的懒加载
     //@表示src的别名
     component: () => import("@/views/Post"),
+  },
+  {
+    path: '/video/:id',
+    //组件的懒加载
+    //@表示src的别名
+    component: () => import("@/views/Video"),
   }
+
 ]
 const router = new VueRouter({
   mode: 'history',

@@ -1,4 +1,5 @@
 <template>
+<router-link :to="'/video/'+data.id">
   <div class="PostItem3">
   <div class="star">
       <div class="plan3">
@@ -11,6 +12,7 @@
       </div>
     </div>
   </div>
+</router-link>
 </template>
 
 <script>

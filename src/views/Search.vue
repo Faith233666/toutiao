@@ -14,7 +14,7 @@
       </div>
       <div class="header">
       <div class="logo">
-        <i class="iconfont iconjiantou2"></i>
+        <i class="iconfont iconjiantou2" @click="$router.back()"></i>
       </div>
       <div class="search">
         <i class="iconfont iconsearch"></i>
@@ -36,6 +36,19 @@ import PostItem1 from '@/components/PostItem1'
 import PostItem2 from '@/components/PostItem2'
 import PostItem3 from '@/components/PostItem3'
 export default {
+  name:"search",
+beforeRouteEnter (to, from, next) {
+    // 在渲染该组件的对应路由被 confirm 前调用
+    // 不！能！获取组件实例 `this`
+    // 因为当守卫执行前，组件实例还没被创建
+    next(vm=>{
+      if(from.path==='/index')
+      {
+        vm.toggle=false;
+        vm.value="";
+      }
+    })
+},
 data()
 {
   return{
