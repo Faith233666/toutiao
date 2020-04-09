@@ -5,7 +5,7 @@
       <div>个人中心</div>
       <i class="iconfont iconshouye" @click='$router.push("/login")'></i>
     </div>
-    <div class="top">
+    <div class="top" @click="$router.push('/edit-profile')">
       <div class="t-left">
         <span>
           <!-- $axios.defaults.baseURL为基地址http://127.0.0.1:3000 -->

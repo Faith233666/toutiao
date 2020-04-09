@@ -5,7 +5,7 @@ Vue.use(VueRouter)
 
 const routes = [{
     path: '/',
-    redirect: '/login'
+    redirect: '/index'
   },
   {
     path: '/login',
@@ -93,6 +93,12 @@ const routes = [{
     //组件的懒加载
     //@表示src的别名
     component: () => import("@/views/Video"),
+  },
+  {
+    path: '/post-comment/:id',
+    //组件的懒加载
+    //@表示src的别名
+    component: () => import("@/views/Post-comment"),
   }
 
 ]

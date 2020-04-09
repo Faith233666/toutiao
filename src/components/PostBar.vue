@@ -1,6 +1,6 @@
 <template>
     <div class="footer">
-      <div class="writeFollow">写跟帖</div>
+      <div class="writeFollow" @click="$router.push('/post-comment/'+data.id)">写跟帖</div>
       <div class="footerIcons">
       <div class="message">{{data.comment_length>100?'99':data.comment_length}}</div>
        <i class="iconfont iconpinglun-"></i>

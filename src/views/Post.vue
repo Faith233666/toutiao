@@ -3,7 +3,7 @@
     <div class="header">
       <div class="nav">
         <div class="icon">
-          <i class="iconfont iconjiantou2"></i>
+          <i class="iconfont iconjiantou2" @click="$router.back()"></i>
           <span class="iconfont iconnew"></span>
         </div>
         <div class="follow" @click="followClick(post.has_follow)" :class="post.has_follow?'active':''">{{post.has_follow?'已关注':'关注'}}</div>
@@ -31,21 +31,17 @@
         <h3>精彩跟帖</h3>
         <p>暂无跟帖，抢占沙发</p>
     </div>
-    <div class="footer">
-      <div class="writeFollow">写跟帖</div>
-      <div class="footerIcons">
-      <div class="message">{{post.comment_length>100?'99':post.comment_length}}</div>
-       <i class="iconfont iconpinglun-"></i>
-        <i class="iconfont iconshoucang" @click="collectClick" :class="post.has_star?'active':''"></i>
-        <i class="iconfont iconfenxiang"></i>
-      </div>
-    </div>
+    <PostBar :data='post'></PostBar>
   </div>
 </template>
 
 <script>
 import moment from 'moment';
+import PostBar from '@/components/PostBar';
 export default {
+  components:{
+    PostBar
+  },
   data()
   {
      return{

@@ -41,6 +41,17 @@ import PostItem2 from '@/components/PostItem2'
 import PostItem3 from '@/components/PostItem3'
 export default {
   name:"index",
+  beforeRouteEnter (to, from, next) {
+   if(from.path==='/category')
+    {
+        next(vm => {
+        vm.active=0;
+      })
+    }
+    else{
+       next();
+    }
+  },
   data()
   {
     return{
