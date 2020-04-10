@@ -1,6 +1,7 @@
 <template>
   <div class="box">
     <VmTop title="精彩跟帖"></VmTop>
+    <!-- list列表 组件 -->
     <van-list
     v-model="loading"
     :finished="finished"
@@ -25,6 +26,7 @@
     </div>
     </van-list>
     <div class='leave'>
+      <!-- Field输入框 组件 -->
     <van-field
     v-model="message"
     rows="1"
@@ -62,6 +64,7 @@ export default {
     }
   },
   mounted() {
+    //获取id和token保存到data中，请求评论列表数据
     let { id } = this.$route.params;
     let {token}=JSON.parse(localStorage.getItem('userInfo'))||{};
     this.token=token;
@@ -81,8 +84,11 @@ export default {
       },
     }).then(res => {
       const {data}=res.data;
+      //合并多页请求的数据
       this.post =[...this.post,...data];
+      //停止加载
       this.loading=false;
+      //当一页加载数小于5的时候，结束加载
       if(data.length<5)
       {
         this.finished=true;
@@ -91,17 +97,23 @@ export default {
     },
      onLoad()
      {
+       //一页加载完毕后继续加载
        this.getList();
      },
      focusClick()
      {
+       //获得焦点事件
        this.isFocus=false;
+       //清除回复内容
        this.message="";
      },
      blurClick()
      {
+       //失去焦点事件
+       //失去焦点后，不要立马隐藏发布按钮，否则点击事件无效
        setTimeout(() => {
        this.isFocus=true;
+       //失去焦点时如果输入框是空，则将回复的人清除
        if(this.message=="")
        {
          this.reply={};
@@ -110,8 +122,10 @@ export default {
      },
      btnclick()
      {
+       //当回复内容为空的时候，跳出函数
        if(this.message.trim()=="") return;
        let config={ content:this.message}
+        //判断是否有reply楼层回复数据
        if(this.reply)
         {
            config.parent_id=this.reply.id;
@@ -125,22 +139,30 @@ export default {
           data: config
         }).then(res=>{
           this.$toast.success('发布成功');
-          this.post=[];
+          //初始化页数
           this.pageIndex=1;
+          //初始化完成状态
+          this.finished=false;
+          //清空post，防止评论合并后重复
+          this.post=[];
           this.getList();
         })
      },
      replyClick(item)
      {
-        console.log(item);
+       //因为点击的时候失去了焦点，触发了失去焦点事件，所以要定时器
         setTimeout(() => {
+        //获取回复的对象
         this.reply=item;
+        //失去焦点
         this.isFocus=false;
+        //输入框获得焦点
         this.$refs.textarea.focus();
         }, 200);
      }
   },
   components: {
+    //注册组件
     VmTop,
     FloorComment
   }

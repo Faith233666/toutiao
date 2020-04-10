@@ -40,17 +40,24 @@ import PostItem1 from '@/components/PostItem1'
 import PostItem2 from '@/components/PostItem2'
 import PostItem3 from '@/components/PostItem3'
 export default {
+  //页面缓存所需要的属性
   name:"index",
+  //组件的路由守卫
   beforeRouteEnter (to, from, next) {
-   if(from.path==='/category')
+    //当进入页是栏目管理页的时候，定位到第一个栏目，重新请求栏目管理页数据
+    if(from.path=='/category')
     {
-        next(vm => {
+       next(vm => {
         vm.active=0;
+        vm.pageReload();
       })
     }
+    //请求栏目管理数据
     else{
-       next();
-    }
+      next(vm=>{
+        vm.pageReload();
+      });
+    }  
   },
   data()
   {
@@ -70,50 +77,6 @@ export default {
       token:""
       // categoryId:999
     }
-  },
-  mounted()
-  {
-    //获取本地存储的数据，用于判断登录与未登录的tab栏
-    //本地存储为空默认返回null,null的布尔值为false
-     let localCategories=JSON.parse(localStorage.getItem('categories'));
-     let {token}=JSON.parse(localStorage.getItem('userInfo'))||{};
-     this.token=token;
-     if(localCategories)
-     {
-     if(localCategories[0].name=='关注'&&!token)
-     {
-      this.reload();
-     }
-    else if(localCategories[0].name!='关注'&&token)
-     {
-       this.reload(token);
-     }
-     //当页面有token，name也等于关注的时候执行的分支
-     else{
-      this.categories = localCategories;
-      this.addPagelist();
-     }
-     }
-     //如果没有本地存储，重新请求
-   else{
-      this.reload();
-    }
-    //调用文章列表接口，pageIndex第一页，pageSize五条数据,category为头条的id
-    // this.$axios({
-    //   url:'/post',
-    //   params:{
-    //     pageIndex:1,
-    //     pageSize:5,
-    //     category:this.categories[this.active].id
-    //   }
-    // }).then(res=>{
-    //   //结构出数据
-    //   const{data}=res.data;
-    //   //赋值给当前页面的posts数组
-    //   this.categories[this.active].posts=data;
-    //   //重新赋值来让页面刷新
-    //   this.categories = [...this.categories];
-    // })
   },
   //三种规则组件
   components:{
@@ -142,6 +105,34 @@ export default {
     }
   },
   methods:{
+    pageReload()
+    {
+     //获取本地存储的数据，用于判断登录与未登录的tab栏
+    //本地存储为空默认返回null,null的布尔值为false
+     let localCategories=JSON.parse(localStorage.getItem('categories'));
+     let {token}=JSON.parse(localStorage.getItem('userInfo'))||{};
+     this.token=token;
+     if(localCategories)
+     {
+     if(localCategories[0].name=='关注'&&!token)
+     {
+      this.reload();
+     }
+    else if(localCategories[0].name!='关注'&&token)
+     {
+       this.reload(token);
+     }
+     //当页面有token，name也等于关注的时候执行的分支
+     else{
+      this.categories = localCategories;
+      this.addPagelist();
+     }
+     }
+     //如果没有本地存储，重新请求
+   else{
+      this.reload();
+    }
+    },
     reload(token)
     {
       const config={
