@@ -1,13 +1,13 @@
 <template>
     <div class="son">
-        <FloorComment :data='data.parent' v-if='data.parent'></FloorComment>
         <div class="comment active">
+          <FloorComment :data='data.parent' v-if='data.parent' @reply='replyClick'></FloorComment>
           <div class="parents">
             <div class="user-info">
               <h4>{{data.user.nickname}}</h4>
-              <p>2小时前</p>
+              <p>{{moment(data.create_date).fromNow()}}</p>
             </div>
-            <span class="speak">回复</span>
+            <span class="speak" @click='replyClick(data)'>回复</span>
           </div>
           <div class="content">
             <p>{{data.content}}</p>
@@ -17,9 +17,22 @@
 </template>
 
 <script>
+import moment from 'moment';
 export default {
   name:'FloorComment',
-  props:['data']
+  props:['data'],
+  data()
+  {
+    return{
+      moment
+    }
+  },
+  methods:{
+      replyClick(data)
+      {
+        this.$emit('reply',data);
+      }
+  }
 }
 </script>
 
