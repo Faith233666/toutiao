@@ -7,7 +7,9 @@
 </template>
 
 <style lang="less">
+//字体图标样式
 @import url("//at.alicdn.com/t/font_1426139_jm7n2373nlh.css");
+//Vue组件的样式
 @import url("../node_modules/vant/lib/index.css");
 @media screen and (max-width: 680px){
   html{
