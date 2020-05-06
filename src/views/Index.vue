@@ -18,6 +18,7 @@
       <!-- 结构如下 vab-tabs>vab-tab-van-pull-refersh>van-list>div -->
       <van-tabs v-model="active" swipeable sticky @scroll="handleScroll">
        <!-- tab栏切换 -->
+       <!-- 报错原因 不建议v-for和v-if一起使用 -->
       <van-tab v-for="(item,index) in categories" :title="item.name" :key="index" v-if='item.is_top==1||item.name=="V"'>
     <!-- list列表 组件 -->
     <!-- immediate-check这个属性可以阻止list组件默认就加载一次 -->
@@ -49,15 +50,15 @@ export default {
     {
        next(vm => {
         vm.active=0;
+       //请求栏目管理数据
         vm.pageReload();
       })
     }
-    //请求栏目管理数据
     else{
-      next(vm=>{
+      next(vm =>{ 
         vm.pageReload();
-      });
-    }  
+      })
+    }
   },
   data()
   {

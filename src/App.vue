@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+     <!-- keep-alive:https://cn.vuejs.org/v2/api/#keep-alive -->
     <keep-alive include="index,search">
     <router-view />
   </keep-alive>

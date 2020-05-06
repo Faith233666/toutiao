@@ -26,28 +26,19 @@
     </div>
     </van-list>
     <div class='leave'>
-   <!-- Field输入框 组件 -->
+      <!-- Field输入框 组件 -->
     <van-field
-    rows="1"
-    autosize
-    type="textarea"
-    placeholder='发布评论'
-    ref="textarea"
-    @click.native='show=true'
-  />
-  <van-action-sheet v-model="show" title="留言" class="dialog">
-  <div class="content">
-     <van-field class="field"
     v-model="message"
     rows="1"
-    autosize
+    :autosize='isFocus'
     type="textarea"
     :placeholder='reply.user?"@回复 "+reply.user.nickname:"发布评论"'
+    @blur="blurClick()"
+    @focus="focusClick()"
+    @keyup.enter='btnclick'
     ref="textarea"
-   />
-    <button @click='btnclick'>发布</button>
-    </div>
-   </van-action-sheet> 
+  />
+    <button v-if='!isFocus' @click='btnclick'>发布</button>
     </div>
   </div>
 </template>
@@ -67,10 +58,9 @@ export default {
       finished:false,
       pageIndex:1,
       message:"",
+      isFocus:true,
       moment,
-      reply:{},
-      show: false,
-      value:"",
+      reply:{}
     }
   },
   mounted() {
@@ -80,16 +70,6 @@ export default {
     this.token=token;
     this.pid = id;
     this.getList();
-  },
-  watch:{
-     show()
-     {
-        if(this.show==false)
-        {
-          this.message="";
-          this.reply={};
-        }
-     }
   },
   methods:{
     getList()
@@ -120,6 +100,26 @@ export default {
        //一页加载完毕后继续加载
        this.getList();
      },
+     focusClick()
+     {
+       //获得焦点事件
+       this.isFocus=false;
+       //清除回复内容
+       this.message="";
+     },
+     blurClick()
+     {
+       //失去焦点事件
+       //失去焦点后，不要立马隐藏发布按钮，否则点击事件无效
+       setTimeout(() => {
+       this.isFocus=true;
+       //失去焦点时如果输入框是空，则将回复的人清除
+       if(this.message=="")
+       {
+         this.reply={};
+       }
+       }, 100);
+     },
      btnclick()
      {
        //当回复内容为空的时候，跳出函数
@@ -145,8 +145,6 @@ export default {
           this.finished=false;
           //清空post，防止评论合并后重复
           this.post=[];
-          //关闭弹出框
-          this.show=false;
           this.getList();
         })
      },
@@ -156,7 +154,10 @@ export default {
         setTimeout(() => {
         //获取回复的对象
         this.reply=item;
-        this.show=true;
+        //失去焦点
+        this.isFocus=false;
+        //输入框获得焦点
+        this.$refs.textarea.focus();
         }, 200);
      }
   },
@@ -218,24 +219,16 @@ export default {
    {
      background:#f5f0f0;
    }
-  }
-}
- .dialog .content {
-  display: flex;
-  padding: 16px;
-  align-items: center;
-  .field{
-    flex: 1;
-  }
-  button{
-     margin-left: 10px;
-     width: 60px;
-     height: 30px;
-     border-radius: 10px;
-     background: red;
-     color: white;
-     padding:5px;
-     flex-shrink: 0;
+   button{
+    padding: 5/@vw 10/@vw;
+    margin-left: 10px;
+    flex-shrink: 0;
+    border-radius: 50px;
+    background: red;
+    color:white;
+   
+     
+   }
   }
 }
 </style>

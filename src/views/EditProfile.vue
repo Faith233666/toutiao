@@ -22,7 +22,7 @@
     <van-field type="password" v-model="password" placeholder="请输入密码" />
     </van-dialog>
     <ListBar label="性别" :tips="['女','男'][userInfo.gender]" @click.native="showGender=true"></ListBar>
-    <!-- ActionSheet 上拉菜单 -->
+    <!-- ActionSheet 动作面板 -->
     <van-action-sheet
       v-model="showGender"
       :actions="actions"
